@@ -137,3 +137,37 @@ Check your LP positions in Solana Explorer.
 * Build a script to automatically **rebalance bins** when price shifts
 * Combine with Swap Guide to simulate market-making
 
+## ✅ Quick Checklist for Concentrated Liquidity
+
+* [ ] SDK mode is set to `MODE.DEVNET`
+* [ ] `CL_POOL_PARAMS.address` points to a valid **Devnet CL pool** (or one you deployed)
+* [ ] Wallet has both token A and token B with enough balance + SOL for fees
+* [ ] Price range (lower/upper tick) is valid — must wrap the current pool price
+* [ ] Decimals match pool configuration (`1e6`, `1e9`, etc.)
+* [ ] `payer` pubkey = connected wallet’s pubkey
+* [ ] LP position NFT account is initialized (created on first add)
+* [ ] Transaction has `recentBlockhash` and `feePayer` set
+
+***
+
+## ⚠️ Common Errors & Fixes (CL Positions)
+
+| Error                             | Cause                                                  | Fix                                            |
+| --------------------------------- | ------------------------------------------------------ | ---------------------------------------------- |
+| **Signer mismatch**               | Payer ≠ wallet pubkey                                  | Use `wallet.publicKey` consistently            |
+| **Invalid price range**           | Lower tick ≥ upper tick, or both outside current price | Choose a valid range around current pool price |
+| **Insufficient liquidity minted** | Tokens provided too small                              | Provide larger amounts or adjust range         |
+| **Position NFT missing**          | User never added liquidity before                      | First add initializes an NFT for the position  |
+| **Decimals mismatch**             | Token decimals ≠ pool decimals                         | Double-check `CL_POOL_PARAMS.token.decimals`   |
+| **Transaction stuck**             | Old `blockhash` used                                   | Refresh with `connection.getLatestBlockhash()` |
+
+***
+
+## 📌 Pro Tips
+
+* **Start with wide ranges** (e.g., ±20% around current price) to ensure position stays active
+* Use `getQuote()` to preview required token A/B before minting liquidity
+* Each liquidity position is tied to an **NFT** — keep it safe, it represents ownership
+* To collect fees, use **increaseLiquidity / decreaseLiquidity / collectFees** flows
+* Confirm tx signatures on Solana Explorer (Devnet)
+

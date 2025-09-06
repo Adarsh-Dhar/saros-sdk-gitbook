@@ -118,3 +118,37 @@ Check your balances in wallet or on Solana Explorer.
 * Try providing liquidity with **different bin ranges**
 * Combine with Swap Guide to test earning fees
 * Explore `/guides/create-pool` if you want to launch your own pool
+
+## ✅ Quick Checklist for a Successful Liquidity Action
+
+* [ ] SDK mode set to `MODE.DEVNET`
+* [ ] `POOL_PARAMS.address` points to a valid **AMM pool** (Devnet or created by you)
+* [ ] Both **token accounts** exist (use `getOrCreateAssociatedTokenAccount`)
+* [ ] Wallet has enough of both tokens (A/B) and **SOL for fees**
+* [ ] Decimals align with pool (`1e6` for 6 decimals, `1e9` for 9 decimals, etc.)
+* [ ] `payer` pubkey = connected wallet pubkey
+* [ ] For **Remove Liquidity**, ensure LP tokens are in wallet
+* [ ] Transaction has `recentBlockhash` and `feePayer` set
+
+***
+
+## ⚠️ Common Errors & Fixes (Liquidity)
+
+| Error                    | Cause                                       | Fix                                              |
+| ------------------------ | ------------------------------------------- | ------------------------------------------------ |
+| **Signer mismatch**      | `payer` pubkey not equal to wallet pubkey   | Always pass `wallet.publicKey` when building tx  |
+| **No LP tokens found**   | User hasn’t added liquidity before          | Add liquidity first; check LP mint in pool state |
+| **Insufficient funds**   | Not enough token A/B or SOL for gas         | Airdrop/mint more tokens (Devnet)                |
+| **Invalid pool address** | Wrong `POOL_PARAMS.address`                 | Verify pool exists in Devnet or create your own  |
+| **Decimals mismatch**    | Token decimals don’t align with pool config | Check `POOL_PARAMS.token.decimals`               |
+| **Transaction stuck**    | Old `blockhash` used                        | Refresh with `connection.getLatestBlockhash()`   |
+
+***
+
+## 📌 Pro Tips
+
+* Start by **adding small liquidity** (e.g., `0.1` token each side)
+* Always fetch the **pool state** before and after to verify LP shares
+* On Devnet, you can create a **new pool** with test tokens before adding liquidity
+* LP tokens represent your pool share — you’ll burn them to remove liquidity
+* Confirm tx signatures on Solana Explorer (Devnet)

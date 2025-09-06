@@ -1,7 +1,5 @@
 # Swap Tokens
 
-## `/guides/swap-tokens.md`
-
 ### 🔄 Swap Tokens with DLMM SDK
 
 Swapping tokens is the most common action in Saros. In this guide, you’ll learn how to:
@@ -105,3 +103,35 @@ Open the transaction in the [Solana Explorer](https://explorer.solana.com/?clust
 * Try swapping the other direction (USDC → C98)
 * Adjust the `slippage` parameter to handle volatile pools
 * Explore `/guides/add-liquidity` to start LP’ing
+
+## ✅ Quick Checklist for a Successful Swap
+
+* [ ] SDK mode is set to `MODE.DEVNET` (switch to MAINNET when live)
+* [ ] `POOL_PARAMS.address` is a valid **Devnet pool** (e.g., C98/WSOL or a pool you created)
+* [ ] `payer` (`PublicKey`) is the same as the connected wallet — avoids signer mismatch
+* [ ] Slippage tolerance (`POOL_PARAMS.slippage`) is set reasonably (e.g., `0.5`)
+* [ ] Transaction has a **recentBlockhash** and `feePayer` assigned
+* [ ] Wallet contains enough **input tokens** (e.g., C98) and **SOL for fees**
+* [ ] If using Coin98, confirm `window.coin98?.sol.signTransaction` is available
+
+***
+
+## ⚠️ Common Errors & Fixes (Swap)
+
+| Error                   | Cause                                               | Fix                                                                      |
+| ----------------------- | --------------------------------------------------- | ------------------------------------------------------------------------ |
+| **Signer mismatch**     | `payer` pubkey ≠ connected wallet pubkey            | Always use `wallet.publicKey` when calling `onSwap`                      |
+| **No signer found**     | No wallet adapter injected                          | Pass a `signTransaction` function (from wallet adapter) or enable Coin98 |
+| **Swap quote failed**   | Pool address invalid or tokens don’t match decimals | Check `POOL_PARAMS` tokens & decimals                                    |
+| **Insufficient funds**  | Not enough base tokens or SOL for fees              | Airdrop/mint test tokens + SOL (Devnet)                                  |
+| **Transaction stuck**   | Old `blockhash` used                                | Fetch fresh `connection.getLatestBlockhash()`                            |
+| **Unexpected slippage** | Market moved during confirmation                    | Increase `slippage` or retry                                             |
+
+***
+
+## 📌 Pro Tips
+
+* Test with **small amounts** first (`1e6` = `1.0` token with 6 decimals)
+* Log the **transaction signature** and check it on Solana Explorer (Devnet)
+* Wrap SOL into WSOL if swapping against native SOL
+* Use `liquidityBookServices.getQuote()` before swapping to preview output
