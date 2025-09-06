@@ -15,8 +15,15 @@
 ## DLMM-SDK
 
 * [Quickstart](dlmm-sdk/quickstart.md)
-* [Tutorials](dlmm-sdk/tutorials.md)
-* [Example](dlmm-sdk/example.md)
+* [Guides](dlmm-sdk/guides/README.md)
+  * [Swap Tokens](dlmm-sdk/guides/swap-tokens.md)
+  * [Add/Remove Liquidity](dlmm-sdk/guides/add-remove-liquidity.md)
+  * [Stake/Farm](dlmm-sdk/guides/stake-farm.md)
+  * [Concentrated Liquidity](dlmm-sdk/guides/concentrated-liquidity.md)
+* [Example](dlmm-sdk/example/README.md)
+  * [Simple Swap](dlmm-sdk/example/simple-swap.md)
+  * [Add/Remove Liquidity](dlmm-sdk/example/add-remove-liquidity.md)
+  * [Swap Dapp](dlmm-sdk/example/swap-dapp.md)
 * [Api Reference](dlmm-sdk/api-reference.md)
 
 ## RUST-SDK
